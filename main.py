@@ -104,7 +104,7 @@ while game:
                 pickle.dump(scoreboard, pickle_file)
             print('Scoreboard:')
             for k, v in sorted_scoreboard:
-                print(f'{v} -- {k}')
+                print(f'{v: >5} - {k: <15}')
             game = False
     else:
         print('You ran out of points.')
