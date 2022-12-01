@@ -1,5 +1,13 @@
 from random import randint
 from time import sleep
+import pickle
+from os import path
+import operator
+
+scoreboard = {}
+if path.exists('scoreboard.pkl'):
+    with open('scoreboard.pkl', 'rb') as pickle_file:
+        scoreboard = pickle.load(pickle_file)
 
 
 class Tankas:
@@ -11,6 +19,7 @@ class Tankas:
     while target_x == coords_x and target_y == coords_y:
         target_x, target_y = randint(-5, 5), randint(-5, 5)
     score = 100
+    tankist_name = input('Enter your name: ')
 
     def generate_new_target(self):
         self.target_x, self.target_y = randint(-5, 5), randint(-5, 5)
@@ -68,8 +77,7 @@ class Tankas:
             for i in range(10):
                 print('Tank' + i * '-' + '>')
                 sleep(0.2)
-                print('Tank----------> Missed')
-
+            print('Tank----------> Missed')
 
 
 tank = Tankas()
@@ -90,7 +98,15 @@ while game:
             tank.info()
         elif action == 'STOPGAME':
             print('Game finished')
+            scoreboard[tank.tankist_name] = tank.score
+            sorted_scoreboard = sorted(scoreboard.items(), key=operator.itemgetter(1), reverse=True)
+            with open('Scoreboard.pkl', 'wb') as pickle_file:
+                pickle.dump(scoreboard, pickle_file)
+            print('Scoreboard:')
+            for k, v in sorted_scoreboard:
+                print(f'{v} -- {k}')
             game = False
     else:
+        print('You ran out of points.')
         print('Game over')
         game = False
