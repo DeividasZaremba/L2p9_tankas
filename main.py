@@ -10,6 +10,7 @@ class Tankas:
     target_x, target_y = randint(-5, 5), randint(-5, 5)
     while target_x == coords_x and target_y == coords_y:
         target_x, target_y = randint(-5, 5), randint(-5, 5)
+    score = 100
 
     def generate_new_target(self):
         self.target_x, self.target_y = randint(-5, 5), randint(-5, 5)
@@ -18,6 +19,7 @@ class Tankas:
         return self.target_x, self.target_y
 
     def move(self, move_direction):
+        tank.score -= 10
         if move_direction == 'N':
             self.coords_y += 1
         if move_direction == 'S':
@@ -31,22 +33,26 @@ class Tankas:
 
     def enemy_down(self):
         for i in range(10):
-            print('Tank' + i*'-' + '>')
+            print('Tank' + i * '-' + '>')
             sleep(0.2)
         print('Tank----------> BOOM')
-        print('Enemy down')
+        print('>>>>>  Enemy down  <<<<<')
+        self.score += 100
         self.generate_new_target()
         print(f'New target spawned at {self.target_x}, {self.target_y}')
 
     def info(self):
+        tank.score -= 10
         print(f'Tank facing {self.direction} direction')
         print(f'Tank coordinates are: {tank.coords_x}, {tank.coords_y}')
         print(f'Target coordinates are: {tank.target_x}, {tank.target_y}')
         print(f'Total shots fired: {self.total_shots}')
         print(f'Shots fired to directions: {self.shots}')
 
+
     def shoot(self):
         print('Shots fired')
+        tank.score -= 10
         self.total_shots += 1
         self.shots[self.direction] += 1
         if self.coords_x == self.target_x or self.coords_y == self.target_y:
@@ -62,7 +68,8 @@ class Tankas:
             for i in range(10):
                 print('Tank' + i * '-' + '>')
                 sleep(0.2)
-            print('Tank----------> Missed')
+                print('Tank----------> Missed')
+
 
 
 tank = Tankas()
@@ -71,14 +78,19 @@ print(f'Tank coordinates are: {tank.coords_x}, {tank.coords_y}')
 print(f'Target coordinates are: {tank.target_x}, {tank.target_y}')
 
 while game:
-    action = input('Move: N - north; W - west; S - south; E - east; shoot; info; stopgame: ').upper()
-    print('-------------------------------')
-    if action == 'N' or action == 'W' or action == 'S' or action == 'E':
-        tank.move(action)
-    elif action == 'SHOOT':
-        tank.shoot()
-    elif action == 'INFO':
-        tank.info()
-    elif action == 'STOPGAME':
-        print('Game finished')
+    if tank.score:
+        print(f'Current score: [{tank.score}]')
+        action = input('Move: N - north; W - west; S - south; E - east; shoot; info; stopgame: ').upper()
+        print('-------------------------------')
+        if action == 'N' or action == 'W' or action == 'S' or action == 'E':
+            tank.move(action)
+        elif action == 'SHOOT':
+            tank.shoot()
+        elif action == 'INFO':
+            tank.info()
+        elif action == 'STOPGAME':
+            print('Game finished')
+            game = False
+    else:
+        print('Game over')
         game = False
