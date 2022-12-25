@@ -40,15 +40,51 @@ class Tankas:
         self.direction = move_direction
         return
 
-    def enemy_down(self):
-        for i in range(10):
-            print('Tank' + i * '-' + '>')
+    def enemy_down_north(self):
+        print('/\\')
+        for i in range(5):
+            print('|')
             sleep(0.2)
-        print('Tank----------> BOOM')
+        print('Tank')
+        print('BOOM')
         print('>>>>>  Enemy down  <<<<<')
         self.score += 100
         self.generate_new_target()
         print(f'New target spawned at {self.target_x}, {self.target_y}')
+
+    def enemy_down_west(self):
+        for i in range(5):
+            print('<' + i * '-' + 'Tank')
+            sleep(0.2)
+        print('BOOM <----- Tank')
+        print('>>>>>  Enemy down  <<<<<')
+        self.score += 100
+        self.generate_new_target()
+        print(f'New target spawned at {self.target_x}, {self.target_y}')
+
+    def enemy_down_south(self):
+        print('Tank')
+        sleep(0.2)
+        for i in range(5):
+            print('|')
+            sleep(0.2)
+        print('\/')
+        print('BOOM')
+        print('>>>>>  Enemy down  <<<<<')
+        self.score += 100
+        self.generate_new_target()
+        print(f'New target spawned at {self.target_x}, {self.target_y}')
+
+    def enemy_down_east(self):
+        for i in range(5):
+            print('Tank' + i * '-' + '>')
+            sleep(0.2)
+        print('Tank -----> BOOM')
+        print('>>>>>  Enemy down  <<<<<')
+        self.score += 100
+        self.generate_new_target()
+        print(f'New target spawned at {self.target_x}, {self.target_y}')
+
 
     def info(self):
         tank.score -= 10
@@ -66,13 +102,13 @@ class Tankas:
         self.shots[self.direction] += 1
         if self.coords_x == self.target_x or self.coords_y == self.target_y:
             if self.coords_x > self.target_x and self.direction == 'W':
-                self.enemy_down()
+                self.enemy_down_west()
             elif self.coords_x < self.target_x and self.direction == 'E':
-                self.enemy_down()
+                self.enemy_down_east()
             elif self.coords_y > self.target_y and self.direction == 'S':
-                self.enemy_down()
+                self.enemy_down_south()
             elif self.coords_y < self.target_y and self.direction == 'N':
-                self.enemy_down()
+                self.enemy_down_north()
         else:
             for i in range(10):
                 print('Tank' + i * '-' + '>')
@@ -86,7 +122,7 @@ print(f'Tank coordinates are: {tank.coords_x}, {tank.coords_y}')
 print(f'Target coordinates are: {tank.target_x}, {tank.target_y}')
 
 while game:
-    if tank.score:
+    if tank.score > 0:
         print(f'Current score: [{tank.score}]')
         action = input('Move: N - north; W - west; S - south; E - east; shoot; info; stopgame: ').upper()
         print('-------------------------------')
@@ -104,7 +140,7 @@ while game:
                 pickle.dump(scoreboard, pickle_file)
             print('Scoreboard:')
             for k, v in sorted_scoreboard:
-                print(f'{v: >5} - {k: <15}')
+                print(f'{v: >5} -> {k: <15}')
             game = False
     else:
         print('You ran out of points.')
